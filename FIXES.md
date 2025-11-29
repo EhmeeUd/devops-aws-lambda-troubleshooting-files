@@ -29,12 +29,11 @@ AWS Provider v4.0+ removed the `acl` parameter from `aws_s3_bucket` resource.
 ```hcl
 resource "aws_s3_bucket" "lambda_bucket" {
   bucket = "lambda-deployment-${random_id.bucket_suffix.hex}"
-  # No ACL here
 }
 ```
 
 ### Files Changed
-- `terraform/main.tf` lines 23-31
+- `terraform/main.tf` lines 29-30
 
 ---
 
@@ -75,14 +74,14 @@ resource "aws_s3_object" "lambda_package" {
 }
 
 # Step 3: Lambda now references the uploaded package
-resource "aws_lambda_function" "my_lambda" {
+resource "aws_lambda_function" "fixed_lambda" {
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key    = aws_s3_object.lambda_package.key  # ✅ Now exists
 }
 ```
 
 ### Files Changed
-- `terraform/main.tf` lines 50-63
+- `terraform/main.tf` lines 72-86, 141-144
 
 ---
 
@@ -139,7 +138,7 @@ resource "aws_iam_role_policy" "lambda_s3_policy" {
 ```
 
 ### Files Changed
-- `terraform/main.tf` lines 99-124
+- `terraform/main.tf` lines 111-138
 
 ---
 
@@ -174,7 +173,7 @@ resource "aws_cloudwatch_log_group" "lambda_logs" {
 ```
 
 ### Files Changed
-- `terraform/main.tf` lines 99-102, 152-158
+- `terraform/main.tf` lines 111-114, 172-174
 
 ---
 
@@ -209,7 +208,7 @@ resource "aws_s3_bucket" "lambda_bucket" {
 ```
 
 ### Files Changed
-- `terraform/main.tf` lines 17-19, 23
+- `terraform/main.tf` lines 23-26, 29-30
 
 ---
 
@@ -275,7 +274,7 @@ Python 3.8 is nearing end-of-life. Best practice is to use latest stable.
 `runtime = "python3.12"`  # stable version
 
 ### Files Changed
-`terraform/main.tf` line 130
+`terraform/main.tf` line 146
 
 
 ## Issue #8: Missing Resource Dependencies
@@ -299,7 +298,7 @@ resource "aws_lambda_function" "fixed_lambda" {
 ```
 
 ### Files Changed
-`terraform/main.tf` lines 141-145
+`terraform/main.tf` lines 159-163
 
 
 ## Issue #9: Missing Terraform Provider Configuration
@@ -323,13 +322,17 @@ terraform {
       source  = "hashicorp/archive"
       version = "~> 2.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.0"
+    }
   }
 }
 ```
 
 ### Files Changed
 
-`terraform/main.tf` lines 1-14
+`terraform/main.tf` lines 1-17
 
 
 ## Issue #10: No Outputs
@@ -453,7 +456,6 @@ aws s3api get-public-access-block \
 
 # Should show all blocks enabled
 ```
-
 ---
 
 ## Summary of All Issues Fixed
