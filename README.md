@@ -13,4 +13,3 @@ This is a project that has issues with Terraform and a simple AWS Lambda functio
 
 1. Execute `terraform apply` to create the resources.
 2. Test the Lambda function to make sure it's working as expected.
-

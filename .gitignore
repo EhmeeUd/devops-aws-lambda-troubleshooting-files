@@ -1,0 +1,7 @@
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfvars
+*.pem
+.DS_Store
+*.lock
