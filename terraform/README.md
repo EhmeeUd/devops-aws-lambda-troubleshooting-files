@@ -234,51 +234,6 @@ terraform destroy
 
 ## Simple Architecture Diagram
 ![Architecture Diagram](../Images/architecture-diagram.png)
-```
-┌─────────────────────────────────────────────────┐
-│                  AWS Account                     │
-│                                                  │
-│  ┌────────────────────────────────────────────┐ │
-│  │         Lambda Function                     │ │
-│  │  - Runtime: Python 3.12                    │ │
-│  │  - Handler: handler.handler                │ │
-│  │  - Memory: 128 MB                          │ │
-│  │  - Timeout: 30s                            │ │
-│  └───────────┬────────────────────────────────┘ │
-│              │                                   │
-│              │ writes logs                       │
-│              ▼                                   │
-│  ┌────────────────────────────────────────────┐ │
-│  │      CloudWatch Logs                       │ │
-│  │  /aws/lambda/spintech-lambda              │ │
-│  │  - Retention: 7 days                       │ │
-│  └────────────────────────────────────────────┘ │
-│              │                                   │
-│              │ writes execution data             │
-│              ▼                                   │
-│  ┌────────────────────────────────────────────┐ │
-│  │         S3 Bucket                          │ │
-│  │  lambda-deployment-[random]                │ │
-│  │  ├── lambda_function_payload.zip           │ │
-│  │  └── lambda-executions/                    │ │
-│  │      └── 2025-11-27/                       │ │
-│  │          └── 10-30-00.json                 │ │
-│  └────────────────────────────────────────────┘ │
-│              ▲                                   │
-│              │ reads deployment package          │
-│              │                                   │
-│  ┌────────────────────────────────────────────┐ │
-│  │         IAM Role                           │ │
-│  │  - Lambda Execution Role                   │ │
-│  │  - Policies:                               │ │
-│  │    • AWSLambdaBasicExecutionRole           │ │
-│  │    • S3 Read/Write Access                  │ │
-│  └────────────────────────────────────────────┘ │
-│                                                  │
-└─────────────────────────────────────────────────┘
-```
-
----
 
 ## Design Decisions
 
