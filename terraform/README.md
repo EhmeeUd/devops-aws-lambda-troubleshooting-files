@@ -233,7 +233,7 @@ terraform destroy
 ---
 
 ## Simple Architecture Diagram
-![Architecture Diagram](Images/architecture-diagram.png)
+![Architecture Diagram](../Images/architecture-diagram.png)
 ```
 ┌─────────────────────────────────────────────────┐
 │                  AWS Account                     │
