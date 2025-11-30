@@ -232,7 +232,9 @@ terraform destroy
 ```
 ---
 
-## Architecture Diagram
+## Simple Architecture Diagram
+![Uploading image.png…]()
+
 ```
 ┌─────────────────────────────────────────────────┐
 │                  AWS Account                     │
