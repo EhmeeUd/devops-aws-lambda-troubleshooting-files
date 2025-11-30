@@ -460,14 +460,18 @@ aws s3api get-public-access-block \
 
 ## Summary of All Issues Fixed
 
-1. ✅ S3 ACL deprecated
-2. ✅ Lambda deployment package missing
-3. ✅ IAM role has no permissions
-4. ✅ No CloudWatch Logs access
-5. ✅ Non-unique bucket name
-6. ✅ Lambda error handling missing
-7. ✅ Outdated Python runtime
-8. ✅ Missing resource dependencies
-9. ✅ No Terraform provider configuration
-10. ✅ No outputs
-11. ✅ **S3 Bucket ACL not supported**
+## Summary of Issues and Fixes (Table Format)
+
+| Issue # | Problem Summary                           | Root Cause                                                | Fix Applied                                                         |
+| ------- | ----------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------- |
+| 1       | Deprecated S3 bucket ACL (`acl` argument) | AWS provider v4+ removed ACL support from `aws_s3_bucket` | Removed ACL, used modern bucket config                              |
+| 2       | Lambda deployment ZIP did not exist in S3 | No archive created or uploaded before Lambda creation     | Added `archive_file` + `aws_s3_object` to build and upload ZIP      |
+| 3       | IAM role had no permissions               | Only trust policy defined, no access policies             | Attached AWSLambdaBasicExecutionRole + custom S3 policy             |
+| 4       | Lambda couldn’t write CloudWatch logs     | Missing logging permissions                               | Added log access policy + created CloudWatch Log Group              |
+| 5       | Bucket name not unique                    | S3 bucket names must be globally unique                   | Added `random_id` to generate unique bucket names                   |
+| 6       | Lambda lacked error handling              | No try/except, unclear failures                           | Added proper exception handling + S3 write logic                    |
+| 7       | Outdated Python runtime                   | Using Python 3.8 (near EOL)                               | Updated to Python 3.12                                              |
+| 8       | Missing resource dependencies             | Lambda created before IAM/S3 objects ready                | Added `depends_on` block to enforce resource ordering               |
+| 9       | No Terraform provider versions            | Risk of provider incompatibility                          | Added `required_providers` + Terraform version constraints          |
+| 10      | No Terraform outputs                      | Hard to test & reference resources                        | Added outputs for Lambda name, ARN, bucket, test command            |
+| 11      | S3 Bucket ACL not supported               | ACL operations no longer allowed on new buckets           | Removed ACL resource and added Public Access Block + SSE encryption |
